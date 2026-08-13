@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'removed everything',
+    message: 'removed everything, and added something',
     pod: os.hostname(),
     timestamp: new Date().toISOString()
   });
