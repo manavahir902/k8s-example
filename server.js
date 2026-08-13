@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'Hello from Kubernetes! this is new update,one more update',
+    message: 'removed everything',
     pod: os.hostname(),
     timestamp: new Date().toISOString()
   });
