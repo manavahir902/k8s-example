@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t myapp:${{ github.sha }} -t myapp:latest .
+
+      - name: Load image into minikube
+        run: |
+          minikube image load myapp:${{ github.sha }}
+          minikube image load myapp:latest
+
+      - name: Apply manifests
+        run: kubectl apply -f k8s/deployment.yaml
+
+      - name: Roll out new image
+        run: |
+          kubectl set image deployment/myapp myapp=myapp:${{ github.sha }}
+          kubectl rollout status deployment/myapp --timeout=120s
+
+      - name: Show pod distribution
+        run: kubectl get pods -o wide -l app=myapp
